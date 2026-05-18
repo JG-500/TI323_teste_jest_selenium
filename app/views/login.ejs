@@ -17,8 +17,8 @@
 </head>
 <body>
     <div><h1>LOGIN</h1></div>
-    <% if (error) { 5>
-        <div class="erro">Erro <% error %></div>
+    <% if (erro) { %>
+        <div class="erro">Erro <%= error %></div>
     <% } %>
     <form method="POST" action="/login" id="loginForm">
         <div>

@@ -5,7 +5,7 @@ const path       = require("path")
 const { error } = require("console")
 
 const app     = express()
-const PORT    = process.env.PORT || 3000
+const PORT    = process.env.PORT || 3001
 const API_URL = process.env.API_URL || 'http://localhost:3001'
 
 app.set('view engine', 'ejs')
@@ -22,7 +22,7 @@ app.use(session({
 }))
 
 function requireAuth(req, res, next){
-    if (req.session && req,secret.user) return next()
+    if (req.session && req.session.user) return next()
     res.redirect('/login')    
 }
 
@@ -43,20 +43,23 @@ app.get("/logout", (req,res) =>{
 app.post('/login', (req,res) =>{
     const {username, password} = req.body
     if (username == 'admin' && password == 'admin'){
-        req.session.user = { username: 'admin', nome: "Adminstrador"}
-        return res.direti('calculo')
+        req.session.user = { username: 'admin', user: "Adminstrador"}
+        return res.redirect('calculo')
     }
     res.render('login', {error: 'Usuario ou senha inválidos'})
 })
 
-app.getI('/calculo', requireAuth, (res, req) =>{
-
+app.get('/calculo', requireAuth, (req, res) => {
+    res.render('calculo', {
+        erro: null,
+        user: req.session.user
+    })
 })
 
 app.post('/calculo', requireAuth, async (req,res) => {
     try{
         const fetch = (await import('node-fetch')).default
-        const response = await fetch(`${API_URL}/api/calcular`, {
+        const response = await fetch(`http://localhost:3000/api/calcular`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(req.body)
@@ -65,7 +68,7 @@ app.post('/calculo', requireAuth, async (req,res) => {
         res.json(data)
     } catch(err){
         console.log(err.message)
-        res.status(400).json({sucess: false, error: err.message})
+        res.status(400).json({success: false, error: err.message})
     }
 })
 
