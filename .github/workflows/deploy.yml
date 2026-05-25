@@ -24,7 +24,7 @@ jobs:
             - name: Deploy_API_RENDER
               id: Deploy_API_RENDER
               run: |
-                RESPONSE=$(--request GET \
+                RESPONSE=$(curl --request GET \
                     --url '${{secrets.DEPLOY_HOOK}}'
                     --header 'accept: application/json'
                     --header 'content-type: application/json')
