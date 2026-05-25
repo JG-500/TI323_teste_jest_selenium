@@ -15,3 +15,17 @@ jobs:
             - name: lista barivies do github
               run: |
                 echo "${{github}}"
+    
+    deploy_api:
+        needs: basico_exemplo
+        if: success()
+        runs-on: ubuntu-latest
+        steps:
+            - name: Deploy_API_RENDER
+              id: Deploy_API_RENDER
+              run: |
+                RESPONSE=$(--request GET \
+                    --url '${{secrets.DEPLOY_HOOK}}'
+                    --header 'accept: application/json'
+                    --header 'content-type: application/json')
+                echo "Deploy response: $RESPONSE"
